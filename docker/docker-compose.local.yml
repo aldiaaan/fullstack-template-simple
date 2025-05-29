@@ -1,0 +1,14 @@
+# https://docs.docker.com/compose/compose-file/
+
+services:
+  db:
+    container_name: perkeo-postgres
+    image: postgres:17
+    volumes:
+      - ./tmp/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: local
+      POSTGRES_USER: local
+      POSTGRES_DATABASE: local
