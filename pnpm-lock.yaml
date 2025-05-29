@@ -11,12 +11,21 @@ importers:
       '@dotenvx/dotenvx':
         specifier: ^1.44.1
         version: 1.44.1
+      '@oslojs/encoding':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@react-router/node':
         specifier: ^7.5.3
         version: 7.6.1(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3)
       '@react-router/serve':
         specifier: ^7.5.3
         version: 7.6.1(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3)
+      '@trpc/client':
+        specifier: ^11.1.4
+        version: 11.1.4(@trpc/server@11.1.4(typescript@5.8.3))(typescript@5.8.3)
+      '@trpc/server':
+        specifier: ^11.1.4
+        version: 11.1.4(typescript@5.8.3)
       drizzle-orm:
         specifier: ^0.44.0
         version: 0.44.0(@types/pg@8.15.2)(pg@8.16.0)
@@ -38,6 +47,9 @@ importers:
       react-router:
         specifier: ^7.5.3
         version: 7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      zod:
+        specifier: ^3.25.34
+        version: 3.25.34
     devDependencies:
       '@react-router/dev':
         specifier: ^7.5.3
@@ -566,6 +578,9 @@ packages:
     resolution: {integrity: sha512-gGq0NJkIGSwdbUt4yhdF8ZrmkGKVz9vAdVzpOfnom+V8PLSmSOVhZwbNvZZS1EYcJN5hzzKBxmmVVAInM6HQLg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  '@oslojs/encoding@1.1.0':
+    resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
+
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -805,6 +820,17 @@ packages:
     resolution: {integrity: sha512-CQ+I8yxNV5/6uGaJjiuymgw0kEQiNKRinYbZXPdx1fk5WgiyReG0VaUx/Xq6aVNSUNJFzxm6o8FNKS5aMaim5A==}
     peerDependencies:
       vite: ^5.2.0 || ^6
+
+  '@trpc/client@11.1.4':
+    resolution: {integrity: sha512-QDaIdwhZlHKMhDAr5m4dJNAYkX4ydo63Up0M01mGcdpnOOmGlvGMRWzdVSLIvGc1JasPSvC15RsgrjMzXpElzw==}
+    peerDependencies:
+      '@trpc/server': 11.1.4
+      typescript: '>=5.7.2'
+
+  '@trpc/server@11.1.4':
+    resolution: {integrity: sha512-X3TSLwQQh5+zi+yY7BnnmUUwVNdeBj3BAt580sAJ+Qd5PvDhz1gSNHGOAlOLulCFn6g/JHf8n+DbnPF/Gb63SA==}
+    peerDependencies:
+      typescript: '>=5.7.2'
 
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
@@ -2037,6 +2063,9 @@ packages:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
     engines: {node: '>=18'}
 
+  zod@3.25.34:
+    resolution: {integrity: sha512-lZHvSc2PpWdcfpHlyB33HA9nqP16GpC9IpiG4lYq9jZCJVLZNnWd6Y1cj79bcLSBKTkxepfpjckPv5Y5VOPlwA==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -2471,6 +2500,8 @@ snapshots:
     dependencies:
       which: 3.0.1
 
+  '@oslojs/encoding@1.1.0': {}
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -2686,6 +2717,15 @@ snapshots:
       '@tailwindcss/oxide': 4.1.8
       tailwindcss: 4.1.8
       vite: 6.3.5(@types/node@20.17.52)(jiti@2.4.2)(lightningcss@1.30.1)
+
+  '@trpc/client@11.1.4(@trpc/server@11.1.4(typescript@5.8.3))(typescript@5.8.3)':
+    dependencies:
+      '@trpc/server': 11.1.4(typescript@5.8.3)
+      typescript: 5.8.3
+
+  '@trpc/server@11.1.4(typescript@5.8.3)':
+    dependencies:
+      typescript: 5.8.3
 
   '@types/estree@1.0.7': {}
 
@@ -3791,3 +3831,5 @@ snapshots:
   yallist@3.1.1: {}
 
   yallist@5.0.0: {}
+
+  zod@3.25.34: {}
