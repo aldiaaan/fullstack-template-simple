@@ -2,13 +2,9 @@ import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { Link, useNavigate } from "react-router";
-import z from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTRPC } from "~/libs/trpc/clients/react";
-import { useMutation } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { Link } from "react-router";
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -17,15 +13,21 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { useCallback } from "react";
+import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+import { useTRPC } from "~/libs/trpc/clients/react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { OctagonX } from "lucide-react";
 
 const schema = z.object({
+  firstName: z.string(),
+  lastName: z.string().optional(),
   password: z.string().min(8),
   email: z.string().min(1).email("This is not a valid email"),
 });
 
-export function LoginForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -38,13 +40,11 @@ export function LoginForm({
   const {
     isPending,
     error,
-    mutateAsync: login,
-  } = useMutation(trpc.auth.login.mutationOptions());
-
-  const navigate = useNavigate();
+    mutate: register,
+  } = useMutation(trpc.auth.register.mutationOptions());
 
   const onSubmit = useCallback((data: z.infer<typeof schema>) => {
-    login(data).then(() => navigate("/app"));
+    register(data);
   }, []);
 
   return (
@@ -55,9 +55,9 @@ export function LoginForm({
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col mb-6">
-                  <h1 className="text-2xl font-bold">Welcome back</h1>
+                  <h1 className="text-2xl font-bold">Register</h1>
                   <p className="text-muted-foreground text-balance">
-                    Login to your account
+                    Create your new account
                   </p>
                   {error && (
                     <div className="mt-4">
@@ -68,6 +68,48 @@ export function LoginForm({
                       </Alert>
                     </div>
                   )}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            First Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              autoFocus
+                              placeholder="John"
+                              type="text"
+                              required
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            Last Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Doe" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
                 <div className="grid gap-2">
                   <FormField
@@ -80,11 +122,10 @@ export function LoginForm({
                         </FormLabel>
                         <FormControl>
                           <Input
-                            {...field}
-                            autoFocus
-                            placeholder="john@gmail.com"
                             type="email"
+                            placeholder="johndoe@example.com"
                             required
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -102,21 +143,22 @@ export function LoginForm({
                           Password
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} type="password" required />
+                          <Input type="password" required {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
+
                 <Button isLoading={isPending} type="submit" className="w-full">
-                  Login
+                  Register
                 </Button>
                 <div className="h-12"></div>
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <Link to="/register" className="underline underline-offset-4">
-                    Sign up
+                  Already have an account?{" "}
+                  <Link to="/login" className="underline underline-offset-4">
+                    Login
                   </Link>
                 </div>
               </div>

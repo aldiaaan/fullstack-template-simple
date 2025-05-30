@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       DATABASE_URL: string;
       NODE_ENV: "development" | "production";
+      COOKIE_SECRET: string;
     }
   }
 }

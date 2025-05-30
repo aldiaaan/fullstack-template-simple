@@ -1,0 +1,1 @@
+export const DEFAULT_SESSION_LIFETIME = 1000 * 60 * 60 * 24 * 30;
