@@ -6,6 +6,7 @@ import {
   pgEnum,
   timestamp,
   text,
+  json,
 } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role", ["SUPERADMIN"]);
@@ -30,6 +31,8 @@ export const authenticatedSessions = pgTable("authenticatedSessions", {
     withTimezone: true,
   }).notNull(),
   updatedAt: timestamp().defaultNow(),
+  deviceInfo: json(),
+  userAgent: text(),
 });
 
 export type User = InferSelectModel<typeof users>;

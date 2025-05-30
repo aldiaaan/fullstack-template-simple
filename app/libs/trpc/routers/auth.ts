@@ -41,7 +41,8 @@ export const authRouter = router({
 
       const authenticatedSession = await createAuthenticatedSession(
         getRandomToken(24),
-        user.id
+        user.id,
+        ctx
       );
 
       const session = await authSessionStorage.getSession(
