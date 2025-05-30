@@ -1,4 +1,4 @@
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
