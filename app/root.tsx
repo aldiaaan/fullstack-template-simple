@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { TRPCReactProvider } from "./libs/trpc/clients/react";
+import { RequestContext } from "./libs/trpc/request-context";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -40,6 +41,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   );
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  return await RequestContext.fromRequest(request, request.headers)
 }
 
 export default function App() {
