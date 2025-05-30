@@ -14,6 +14,7 @@ export type RequestContextArgs = {
   request: Request;
   headers: Headers;
   user?: User;
+  authToken?: string;
 };
 
 export class RequestContext {
@@ -21,24 +22,27 @@ export class RequestContext {
   request: Request;
   headers: Headers;
   user?: User;
+  authToken?: string;
 
   constructor(args: RequestContextArgs) {
     this.id = args.id;
     this.request = args.request;
     this.headers = args.headers;
     this.user = args.user;
+    this.authToken = args.authToken;
   }
 
   toJSON() {
     return {
       id: this.id,
       user: this.user,
+      authToken: this.authToken,
     };
   }
 
   static async fromRequest(request: Request, headers: Headers) {
     const authSession = await authSessionStorage.getSession(
-      headers.get("Cookie")
+      request.headers.get("Cookie")
     );
 
     const authToken = authSession.data.token;
@@ -58,6 +62,7 @@ export class RequestContext {
       headers,
       request,
       user,
+      authToken,
     });
   }
 }

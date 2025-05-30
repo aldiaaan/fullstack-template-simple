@@ -6,8 +6,24 @@ import { verifyUser } from "~/libs/auth/verify-user";
 import { getRandomToken } from "~/utils/random";
 import { authSessionStorage } from "~/sessions/auth";
 import { InvalidCredentialsError } from "~/errors";
+import { invalidateAuthenticatedSession } from "~/libs/db/mutations";
+import { tokenForSessionId } from "~/libs/auth/token-for-session-id";
 
 export const authRouter = router({
+  logout: procedure.mutation(async ({ ctx }) => {
+    if (ctx.authToken) {
+      await invalidateAuthenticatedSession(tokenForSessionId(ctx.authToken));
+
+      const session = await authSessionStorage.getSession(
+        ctx.headers.get("Cookie")
+      );
+
+      ctx.headers.set(
+        "Set-Cookie",
+        await authSessionStorage.destroySession(session)
+      );
+    }
+  }),
   login: procedure
     .input(
       z.object({
