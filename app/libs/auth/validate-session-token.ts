@@ -5,7 +5,11 @@ import {
 } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { db } from "../db/db";
-import { authenticatedSessions, users } from "../db/schema";
+import {
+  authenticatedSessions,
+  users,
+  type PermissionEnum,
+} from "../db/schema";
 import {
   extendAuthenticatedSession,
   invalidateAuthenticatedSession,
@@ -17,6 +21,7 @@ export type ValidateSessionTokenReturn = {
     firstName: string;
     lastName: string | null;
     email: string;
+    permissions: PermissionEnum[];
     id: string;
   };
   expiresAt: Date;
@@ -61,6 +66,7 @@ export async function validateSessionToken(
       lastName: user.lastName,
       email: user.email,
       id: user.id,
+      permissions: user.permissions || [],
     },
   };
 }
