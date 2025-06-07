@@ -1,13 +1,28 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Table } from "@tanstack/react-table";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "~/libs/trpc/app-router";
 import type { DataTableFacet } from "../data-table/data-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { formatDistance } from "date-fns";
 import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 export type UserRowItem =
   inferRouterOutputs<AppRouter>["user"]["hq"]["get"]["users"][number];
+
+export function BulkActions(props: { table: Table<UserRowItem> }) {
+  return (
+    <div className="space-x-1">
+      <Button
+        variant="destructive"
+        size="sm"
+        className="text-xs px-2 py-1 h-auto"
+      >
+        Delete
+      </Button>
+    </div>
+  );
+}
 
 export const facets = [
   {

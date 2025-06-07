@@ -9,7 +9,7 @@ import {
   formatTanstackTableFilters,
   formatTanstackTableSorting,
 } from "~/utils/react";
-import { columns, facets } from "~/components/tables/users";
+import { BulkActions, columns, facets } from "~/components/tables/users";
 import { useDataTable } from "~/hooks/use-data-table";
 import { DashboardSectionMain } from "~/components/dashboard/section-main";
 
@@ -36,6 +36,7 @@ export default function DashboardUsersPage() {
       <DashboardSectionHeader title="Users" />
       <DashboardSectionMain>
         <DataTable
+          bulkActions={BulkActions}
           error={error?.message}
           {...table}
           total={total}

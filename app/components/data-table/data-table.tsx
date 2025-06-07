@@ -12,6 +12,7 @@ import {
   type OnChangeFn,
   type PaginationState,
   type SortingState,
+  type Table as TableType,
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
@@ -27,7 +28,7 @@ import {
 } from "~/components/ui/table";
 
 import { DataTablePagination } from "./pagination";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DataTableViewOptions } from "./view-options";
 import { DataTableFacetedFilter } from "./faceted-filter";
 import { Skeleton } from "../ui/skeleton";
@@ -60,6 +61,7 @@ type DataTableProps<TData, TValue> = {
   onFiltersChange?: OnChangeFn<ColumnFiltersState>;
   onPaginationChange?: OnChangeFn<PaginationState>;
   searchables?: (keyof TData)[];
+  bulkActions?: React.ComponentType<{ table: TableType<TData> }>;
 };
 
 const MotionTableRow = motion.create(TableRow);
@@ -81,6 +83,7 @@ export function DataTable<TData, TValue>({
   error,
   onSortingChange,
   onRetry,
+  bulkActions,
   sorting,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
@@ -101,6 +104,8 @@ export function DataTable<TData, TValue>({
         : columns,
     [isLoading]
   );
+
+  const BulkActions = bulkActions || React.Fragment;
 
   const table = useReactTable({
     data: tableData,
@@ -131,7 +136,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col relative gap-4">
       <div className="flex">
         <DataTableSearchInput
           searchables={searchables}
@@ -148,23 +153,43 @@ export function DataTable<TData, TValue>({
         ))}
         <DataTableViewOptions table={table} className="ml-auto" />
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border relative">
         <Table>
           <TableHeader className="bg-muted sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                {table.getSelectedRowModel().rows.length > 0 ? (
+                  <>
+                    <TableHead colSpan={1}>
+                      {flexRender(
+                        headerGroup.headers[0].column.columnDef.header,
+                        headerGroup.headers[0].getContext()
+                      )}
                     </TableHead>
-                  );
-                })}
+                    <TableHead colSpan={columns.length - 1}>
+                      <div className="flex gap-1 items-center w-full">
+                        <p className="text-sm mr-auto">
+                          {table.getSelectedRowModel().rows.length} items
+                          selected
+                        </p>
+                        <BulkActions table={table} />
+                      </div>
+                    </TableHead>
+                  </>
+                ) : (
+                  headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })
+                )}
               </TableRow>
             ))}
           </TableHeader>
