@@ -2,9 +2,16 @@ import { z } from "zod";
 import { procedure, router } from "../trpc";
 import { getUsers } from "~/libs/db/queries";
 import type { PermissionEnum } from "~/libs/db/schema";
+import { deleteUsers } from "~/libs/db/mutations";
 
 export const userRouter = router({
   hq: {
+    delete: procedure
+      .input(z.string().array())
+      .mutation(async ({ ctx, input }) => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await deleteUsers(input);
+      }),
     get: procedure
       .input(
         z.object({

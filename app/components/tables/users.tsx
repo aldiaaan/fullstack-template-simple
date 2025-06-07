@@ -6,20 +6,27 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { formatDistance } from "date-fns";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
+import { DeleteUsersAlert } from "../delete-user-alert";
 
 export type UserRowItem =
   inferRouterOutputs<AppRouter>["user"]["hq"]["get"]["users"][number];
 
 export function BulkActions(props: { table: Table<UserRowItem> }) {
+  const { table } = props;
+
   return (
     <div className="space-x-1">
-      <Button
-        variant="destructive"
-        size="sm"
-        className="text-xs px-2 py-1 h-auto"
+      <DeleteUsersAlert
+        users={table.getSelectedRowModel().rows.map((row) => row.original)}
       >
-        Delete
-      </Button>
+        <Button
+          variant="destructive"
+          size="sm"
+          className="text-xs px-2 py-1 h-auto"
+        >
+          Delete
+        </Button>
+      </DeleteUsersAlert>
     </div>
   );
 }

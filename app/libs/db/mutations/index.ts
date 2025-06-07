@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "../db";
-import { authenticatedSessions } from "../schema";
+import { authenticatedSessions, users } from "../schema";
 
 export async function invalidateAuthenticatedSession(
   sessionId: string
@@ -29,4 +29,10 @@ export async function extendAuthenticatedSession(sessionId: string) {
     .where(eq(authenticatedSessions.id, sessionId));
 
   return newDate;
+}
+
+export async function deleteUsers(ids: string[] = []) {
+  if (ids.length === 0) return true;
+
+  await db.delete(users).where(inArray(users.id, ids));
 }
