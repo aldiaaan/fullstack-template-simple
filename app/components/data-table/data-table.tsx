@@ -62,7 +62,7 @@ type DataTableProps<TData, TValue> = {
   searchables?: (keyof TData)[];
 };
 
-const MotionTableRow = motion(TableRow);
+const MotionTableRow = motion.create(TableRow);
 
 export function DataTable<TData, TValue>({
   columns = [],
