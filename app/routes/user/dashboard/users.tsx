@@ -11,6 +11,7 @@ import {
 } from "~/utils/react";
 import { columns, facets } from "~/components/tables/users";
 import { useDataTable } from "~/hooks/use-data-table";
+import { DashboardSectionMain } from "~/components/dashboard/section-main";
 
 export default function DashboardUsersPage() {
   const trpc = useTRPC();
@@ -33,28 +34,19 @@ export default function DashboardUsersPage() {
   return (
     <SidebarInset>
       <DashboardSectionHeader title="Users" />
-      <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-2">
-          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <div className="px-4 lg:px-6">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-1 items-center gap-2"></div>
-              </div>
-              <DataTable
-                error={error?.message}
-                {...table}
-                total={total}
-                facets={facets}
-                columns={columns}
-                isLoading={isPending}
-                onRetry={refetch}
-                data={users}
-                searchables={["email", "firstName", "lastName", "username"]}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <DashboardSectionMain>
+        <DataTable
+          error={error?.message}
+          {...table}
+          total={total}
+          facets={facets}
+          columns={columns}
+          isLoading={isPending}
+          onRetry={refetch}
+          data={users}
+          searchables={["email", "firstName", "lastName", "username"]}
+        />
+      </DashboardSectionMain>
     </SidebarInset>
   );
 }
