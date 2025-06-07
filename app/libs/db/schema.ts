@@ -1,4 +1,4 @@
-import type { InferSelectModel } from "drizzle-orm";
+import { relations, sql, type InferSelectModel } from "drizzle-orm";
 import {
   uuid,
   pgTable,
@@ -21,6 +21,10 @@ export const users = pgTable("users", {
   username: varchar({ length: 32 }).notNull(),
   role: roleEnum(),
   permissions: permissionEnum().array().default([]),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .defaultNow()
+    .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 });
 
 export const authenticatedSessions = pgTable("authenticatedSessions", {
@@ -36,6 +40,20 @@ export const authenticatedSessions = pgTable("authenticatedSessions", {
   deviceInfo: json(),
   userAgent: text(),
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  authenticatedSessions: many(authenticatedSessions),
+}));
+
+export const authenticatedSessionRelations = relations(
+  authenticatedSessions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [authenticatedSessions.userId],
+      references: [users.id],
+    }),
+  })
+);
 
 export type User = InferSelectModel<typeof users>;
 export type AuthenticatedSession = InferSelectModel<

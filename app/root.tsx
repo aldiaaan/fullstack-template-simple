@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { TRPCReactProvider } from "./libs/trpc/clients/react";
 import { RequestContext } from "./libs/trpc/request-context";
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,13 +45,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  return await RequestContext.fromRequest(request, request.headers)
+  return await RequestContext.fromRequest(request, request.headers);
 }
 
 export default function App() {
   return (
     <TRPCReactProvider>
-      <Outlet />
+      <NuqsAdapter>
+        <Outlet />
+      </NuqsAdapter>
     </TRPCReactProvider>
   );
 }
