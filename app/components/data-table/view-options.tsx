@@ -4,26 +4,31 @@ import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import type { Table } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
 
-import { Button } from "./button";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuSeparator,
-} from "./dropdown-menu";
+} from "../ui/dropdown-menu";
+import { cn } from "~/utils/react";
 
-export function DataTableViewOptions<TData>({
-  table,
-}: {
+export type DataTableViewOptionsProps<TData> = {
   table: Table<TData>;
-}) {
+  className?: string;
+};
+
+export function DataTableViewOptions<TData>(
+  props: DataTableViewOptionsProps<TData>
+) {
+  const { table, className } = props;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           size="sm"
-          className="hidden h-8 lg:flex"
+          className={cn("hidden h-8 lg:flex", className)}
         >
           <Settings2 />
           View

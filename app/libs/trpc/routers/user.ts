@@ -10,10 +10,14 @@ export const userRouter = router({
         z.object({
           page: z.number().default(0),
           limit: z.number().default(10),
-          permissions: z.array(z.string()).default([]),
-          name: z.string().optional(),
-          username: z.string().optional(),
-          email: z.string().optional(),
+          filters: z
+            .object({
+              permissions: z.array(z.string()).default([]),
+              name: z.string().optional(),
+              username: z.string().optional(),
+              email: z.string().optional(),
+            })
+            .default({}),
           orders: z
             .object({
               createdAt: z.enum(["desc", "asc"]).optional(),
@@ -28,11 +32,11 @@ export const userRouter = router({
         return getUsers({
           limit: input.limit,
           offset: input.limit * input.page,
-          permissions: input.permissions as PermissionEnum[],
-          email: input.email,
-          firstName: input.name,
-          lastName: input.name,
-          username: input.username,
+          permissions: input.filters.permissions as PermissionEnum[],
+          email: input.filters.email,
+          firstName: input.filters.name,
+          lastName: input.filters.name,
+          username: input.filters.username,
           orders: input.orders,
         });
       }),

@@ -2,8 +2,8 @@ import type { Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
 
 import { cn } from "~/utils/react";
-import { Badge } from "./badge";
-import { Button } from "./button";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,14 +12,15 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "./command";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Separator } from "./separator";
+} from "../ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 import { memo } from "react";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
   title?: string;
+  className?: string;
   options: {
     label: string;
     value: string;
@@ -27,20 +28,22 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }[];
 }
 
-function RawDataTableFacetedFilter<TData, TValue>({
-  column,
-  title,
-  options,
-}: DataTableFacetedFilterProps<TData, TValue>) {
+function RawDataTableFacetedFilter<TData, TValue>(
+  props: DataTableFacetedFilterProps<TData, TValue>
+) {
+  const { options, column, title, className } = props;
+
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
-
-  console.log("facet rendered " + title);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn("h-8 border-dashed", className)}
+        >
           <PlusCircle />
           {title}
           {selectedValues?.size > 0 && (
@@ -144,6 +147,4 @@ function RawDataTableFacetedFilter<TData, TValue>({
   );
 }
 
-export const DataTableFacetedFilter = memo(
-  RawDataTableFacetedFilter
-) as typeof RawDataTableFacetedFilter;
+export const DataTableFacetedFilter = RawDataTableFacetedFilter;

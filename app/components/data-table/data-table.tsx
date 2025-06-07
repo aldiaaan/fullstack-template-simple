@@ -26,44 +26,49 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-import { DataTablePagination } from "./data-table-pagination";
+import { DataTablePagination } from "./pagination";
 import { useEffect, useMemo, useState } from "react";
-import { DataTableViewOptions } from "./data-table-view-options";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { Skeleton } from "./skeleton";
-import { Button } from "./button";
-import { Input } from "./input";
+import { DataTableViewOptions } from "./view-options";
+import { DataTableFacetedFilter } from "./faceted-filter";
+import { Skeleton } from "../ui/skeleton";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { DataTableSearchInput } from "./search-input";
 
-interface DataTableProps<TData, TValue> {
+export type DataTableFacet<TData> = {
+  column: keyof TData;
+  title?: string;
+  options?: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+};
+
+type DataTableProps<TData, TValue> = {
   error?: string;
-  columns: ColumnDef<TData, TValue>[];
+  columns?: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
-  data: TData[];
-  onRetry?: () => void;
+  data?: TData[];
   sorting?: SortingState;
+  filters?: ColumnFiltersState;
+  pagination?: PaginationState;
+  facets?: DataTableFacet<TData>[];
+  total?: number;
+  onRetry?: () => void;
   onSortingChange?: OnChangeFn<SortingState>;
   onFiltersChange?: OnChangeFn<ColumnFiltersState>;
-  filters: ColumnFiltersState;
-  pagination?: PaginationState;
-  onPaginationChange: OnChangeFn<PaginationState>;
-  facets?: {
-    column: keyof TData;
-    title?: string;
-    options?: {
-      label: string;
-      value: string;
-      icon?: React.ComponentType<{ className?: string }>;
-    }[];
-  }[];
-  total?: number;
-}
+  onPaginationChange?: OnChangeFn<PaginationState>;
+  searchables?: (keyof TData)[];
+};
 
 const MotionTableRow = motion(TableRow);
 
 export function DataTable<TData, TValue>({
-  columns,
-  data,
+  columns = [],
+  data = [],
   facets = [],
+  searchables = [],
   pagination = {
     pageIndex: 0,
     pageSize: 10,
@@ -128,13 +133,10 @@ export function DataTable<TData, TValue>({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex">
-        <Input
-          placeholder="Search"
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px] mr-4"
+        <DataTableSearchInput
+          searchables={searchables}
+          table={table}
+          className="mr-2"
         />
         {facets.map((facet) => (
           <DataTableFacetedFilter
@@ -144,9 +146,7 @@ export function DataTable<TData, TValue>({
             title={facet.title}
           />
         ))}
-        <div className="ml-auto">
-          <DataTableViewOptions table={table} />
-        </div>
+        <DataTableViewOptions table={table} className="ml-auto" />
       </div>
       <div className="rounded-md border">
         <Table>
