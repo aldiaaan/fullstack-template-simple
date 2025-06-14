@@ -19,10 +19,11 @@ export type ValidateSessionTokenReturn = {
   id: string;
   user: {
     firstName: string;
-    lastName: string | null;
+    lastName: string;
     email: string;
     permissions: PermissionEnum[];
     id: string;
+    username: string;
   };
   expiresAt: Date;
 };
@@ -63,9 +64,10 @@ export async function validateSessionToken(
     id: authenticatedSession.id,
     user: {
       firstName: user.firstName,
-      lastName: user.lastName,
+      lastName: user.lastName || "",
       email: user.email,
       id: user.id,
+      username: user.username,
       permissions: user.permissions || [],
     },
   };

@@ -1,18 +1,48 @@
+import { UAParser } from "ua-parser-js";
 import { db } from "../db";
-import { users, type PermissionEnum } from "../schema";
+import { authenticatedSessions, users, type PermissionEnum } from "../schema";
 import {
   and,
-  arrayContained,
   arrayContains,
   asc,
   count,
   desc,
   eq,
+  gt,
   ilike,
-  inArray,
   or,
-  sql,
 } from "drizzle-orm";
+
+export async function getAuthenticatedSessions(args?: {
+  userId?: string; // Made userId optional within the args object as well
+}) {
+  if (!args?.userId) return [];
+  const currentTime = new Date();
+
+  try {
+    const sessions = await db.query.authenticatedSessions.findMany({
+      where: and(
+        eq(authenticatedSessions.userId, args.userId),
+        gt(authenticatedSessions.expiresAt, currentTime)
+      ),
+    });
+    return sessions as Array<
+      (typeof sessions)[number] & {
+        deviceInfo: ReturnType<typeof UAParser>;
+      }
+    >;
+  } catch (error) {
+    throw new Error(
+      "getAuthenticatedSessions: Failed to retrieve authenticated sessions."
+    );
+  }
+}
+
+export async function getAuthenticatedSession(sessionId: string) {
+  return db.query.authenticatedSessions.findFirst({
+    where: eq(authenticatedSessions.id, sessionId),
+  });
+}
 
 export async function checkIfusernameExists(
   username: string
@@ -103,4 +133,10 @@ export async function getUsers(args?: {
     total: total[0].count,
     users: result.map(({ password, ...rest }) => rest),
   };
+}
+
+export async function getUserById(userId: string) {
+  return db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
 }

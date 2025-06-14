@@ -24,7 +24,7 @@ export const users = pgTable("users", {
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt")
     .defaultNow()
-    .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+    .$onUpdateFn(() => new Date()),
 });
 
 export const authenticatedSessions = pgTable("authenticatedSessions", {
@@ -41,6 +41,7 @@ export const authenticatedSessions = pgTable("authenticatedSessions", {
   updatedAt: timestamp().defaultNow(),
   deviceInfo: json(),
   userAgent: text(),
+  ip: text(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

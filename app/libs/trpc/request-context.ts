@@ -6,7 +6,8 @@ type User = {
   email: string;
   id: string;
   firstName: string;
-  lastName: string | null;
+  lastName?: string;
+  username: string;
 };
 
 export type RequestContextArgs = {
@@ -39,6 +40,14 @@ export class RequestContext {
       authToken: this.authToken,
     };
   }
+
+  only = {
+    allow: {
+      loggedIn: () => {
+        if (!this.user) throw new Error("You have to login");
+      },
+    },
+  };
 
   static async fromRequest(request: Request, headers: Headers) {
     const authSession = await authSessionStorage.getSession(

@@ -17,6 +17,13 @@ export default [
     layout("routes/user/dashboard/layout.tsx", [
       index("routes/user/dashboard/dashboard.tsx"),
       route("users", "routes/user/dashboard/users.tsx"),
+      ...prefix("settings", [
+        layout("routes/user/dashboard/settings/settings.tsx", [
+          index("routes/user/dashboard/settings/home.tsx"),
+          route("profile", "routes/user/dashboard/settings/profile.tsx"),
+          route("security", "routes/user/dashboard/settings/security.tsx"),
+        ]),
+      ]),
     ]),
   ]),
 ] satisfies RouteConfig;

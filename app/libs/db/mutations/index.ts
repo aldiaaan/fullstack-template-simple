@@ -36,3 +36,41 @@ export async function deleteUsers(ids: string[] = []) {
 
   await db.delete(users).where(inArray(users.id, ids));
 }
+
+export async function deleteAuthenticatedSession(
+  sessionId: string
+): Promise<boolean> {
+  await db
+    .delete(authenticatedSessions)
+    .where(eq(authenticatedSessions.id, sessionId))
+    .returning({ id: authenticatedSessions.id });
+  return true;
+}
+
+export async function deleteUserAuthenticatedSessions(
+  userId: string
+): Promise<boolean> {
+  await db
+    .delete(authenticatedSessions)
+    .where(eq(authenticatedSessions.userId, userId));
+  return true;
+}
+
+export async function updateUserProfile(
+  userId: string,
+  data: {
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+  }
+) {
+  await db.update(users).set(data).where(eq(users.id, userId));
+
+  return true;
+}
+
+export async function updateUserPassword(userId: string, password: string) {
+  await db.update(users).set({ password }).where(eq(users.id, userId));
+
+  return true;
+}
