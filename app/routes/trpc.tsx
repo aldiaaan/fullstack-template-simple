@@ -12,6 +12,12 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     createContext(opts) {
       return RequestContext.fromRequest(opts.req, opts.resHeaders);
     },
+    onError(opts) {
+      const { error, ctx } = opts;
+      if (error.code === "INTERNAL_SERVER_ERROR") {
+        console.error(`${ctx?.id} | `, error.message);
+      }
+    },
   });
 
   return response;
