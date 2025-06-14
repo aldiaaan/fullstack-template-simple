@@ -18,7 +18,9 @@ export async function verifyUser(args: VerifyUserArgs) {
 
   if (!user) return null;
 
-  if (!verify(user.password, args.password)) return null;
+  const isVerified = await verify(user.password, args.password);
+
+  if (!isVerified) return null;
 
   return {
     id: user.id,
