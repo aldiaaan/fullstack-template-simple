@@ -44,7 +44,7 @@ export function LoginForm({
   const navigate = useNavigate();
 
   const onSubmit = useCallback((data: z.infer<typeof schema>) => {
-    login(data).then(() => navigate("/app"));
+    login(data).then(() => navigate("/dashboard"));
   }, []);
 
   return (
