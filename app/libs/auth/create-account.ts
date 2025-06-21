@@ -21,7 +21,13 @@ function generateRandomUsername(length: number): string {
   return result;
 }
 
-export async function createAccount(newAccount: CreateAccountArgs) {
+export async function createAccount(
+  newAccount: CreateAccountArgs,
+  ctx?: { db: typeof db }
+) {
+  // TODO: refactor this
+  const drizzle = ctx?.db || db;
+
   const { email, firstName, lastName } = newAccount;
 
   let username = newAccount.username;
@@ -50,7 +56,7 @@ export async function createAccount(newAccount: CreateAccountArgs) {
     if (!username) throw new Error("Failed to generate username");
   }
 
-  const createdAccount = await db
+  const createdAccount = await drizzle
     .insert(users)
     .values({
       email,
