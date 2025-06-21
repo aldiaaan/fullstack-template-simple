@@ -2,6 +2,7 @@ import { createCookieSessionStorage, type SessionStorage } from "react-router";
 
 export type AuthSessionStorageData = {
   token: string;
+  "impersonate.token"?: string;
 };
 
 export const authSessionStorage =

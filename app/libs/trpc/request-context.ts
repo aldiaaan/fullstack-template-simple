@@ -16,6 +16,7 @@ export type RequestContextArgs = {
   headers: Headers;
   user?: User;
   authToken?: string;
+  isImpersonating?: boolean;
 };
 
 export class RequestContext {
@@ -24,6 +25,7 @@ export class RequestContext {
   headers: Headers;
   user?: User;
   authToken?: string;
+  isImpersonating: boolean = false;
 
   constructor(args: RequestContextArgs) {
     this.id = args.id;
@@ -31,6 +33,7 @@ export class RequestContext {
     this.headers = args.headers;
     this.user = args.user;
     this.authToken = args.authToken;
+    this.isImpersonating = args.isImpersonating || false;
   }
 
   toJSON() {
@@ -54,7 +57,9 @@ export class RequestContext {
       request.headers.get("Cookie")
     );
 
-    const authToken = authSession.data.token;
+    const authToken = authSession.data["impersonate.token"]
+      ? authSession.data["impersonate.token"]
+      : authSession.data.token;
 
     let user: User | undefined;
 
@@ -71,7 +76,9 @@ export class RequestContext {
       headers,
       request,
       user,
-      authToken,
+      authToken: user ? authToken : undefined,
+      isImpersonating:
+        Boolean(authSession.data["impersonate.token"]) && Boolean(user),
     });
   }
 }

@@ -2,13 +2,16 @@ import { Outlet } from "react-router";
 import { authSessionStorage } from "~/sessions/auth";
 import type { Route } from "./+types/layout";
 import { redirect } from "react-router";
+import { RequestContext } from "~/libs/trpc/request-context";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await authSessionStorage.getSession(
     request.headers.get("Cookie")
   );
 
-  if (session.get("token")) return redirect("/dashboard");
+  const context = await RequestContext.fromRequest(request, request.headers);
+
+  if (context.user) return redirect("/dashboard");
 }
 
 export default function AuthLayout() {

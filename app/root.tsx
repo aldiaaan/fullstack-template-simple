@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -12,6 +13,7 @@ import "./app.css";
 import { TRPCReactProvider } from "./libs/trpc/clients/react";
 import { RequestContext } from "./libs/trpc/request-context";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
+import { ImpersonateToolbar } from "./components/impersonate-toolbar";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -49,9 +51,14 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function App() {
+  const data = useLoaderData<typeof loader>();
+
   return (
     <TRPCReactProvider>
       <NuqsAdapter>
+        {data.isImpersonating && (
+          <ImpersonateToolbar className="fixed bottom-6 left-1/2 -translate-x-1/2" />
+        )}
         <Outlet />
       </NuqsAdapter>
     </TRPCReactProvider>

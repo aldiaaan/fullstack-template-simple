@@ -17,6 +17,15 @@ import {
 } from "~/libs/db/mutations";
 import { hash, verify } from "@node-rs/argon2";
 import { sleep } from "~/utils/network";
+import { createAuthenticatedSession } from "~/libs/auth/create-authenticated-session";
+import { getRandomToken } from "~/utils/random";
+import { authSessionStorage } from "~/sessions/auth";
+import { revokeSessionToken } from "~/libs/auth/revoke-session-token";
+import {
+  CannotImpersonateYourselfError,
+  CannotQuitNonExistingImpersonationSessionError,
+  IllegalImpersonationError,
+} from "~/errors";
 
 export const userRouter = router({
   me: {
@@ -90,6 +99,49 @@ export const userRouter = router({
       }),
   },
   hq: {
+    quitImpersonating: procedure.mutation(async ({ ctx }) => {
+      const session = await authSessionStorage.getSession(
+        ctx.request.headers.get("Cookie")
+      );
+
+      const token = session.data["impersonate.token"];
+
+      if (!token) {
+        throw new CannotQuitNonExistingImpersonationSessionError();
+      }
+
+      await revokeSessionToken(token);
+      session.unset("impersonate.token");
+
+      ctx.headers.set(
+        "Set-Cookie",
+        await authSessionStorage.commitSession(session)
+      );
+    }),
+    impersonate: procedure
+      .input(z.string())
+      .mutation(async ({ ctx, input: userId }) => {
+        if (userId === ctx.user?.id) throw new CannotImpersonateYourselfError();
+
+        if (ctx.isImpersonating) throw new IllegalImpersonationError();
+
+        const authenticatedSession = await createAuthenticatedSession(
+          getRandomToken(24),
+          userId,
+          ctx
+        );
+
+        const session = await authSessionStorage.getSession(
+          ctx.request.headers.get("Cookie")
+        );
+
+        session.set("impersonate.token", authenticatedSession.token);
+
+        ctx.headers.set(
+          "Set-Cookie",
+          await authSessionStorage.commitSession(session)
+        );
+      }),
     delete: procedure
       .input(z.string().array())
       .mutation(async ({ ctx, input }) => {

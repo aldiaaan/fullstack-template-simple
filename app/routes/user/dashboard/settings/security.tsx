@@ -111,7 +111,7 @@ export default function DashboardSettingsSecurityPage() {
 
   const user = useUser();
 
-  const { data: sessions, isLoading } = useQuery(
+  const { data: sessions, isFetching } = useQuery(
     trpc.user.me.sessions.queryOptions()
   );
 
@@ -196,7 +196,7 @@ export default function DashboardSettingsSecurityPage() {
                 subtitle="Once you log in, your authenticated sessions will pop up right here."
               />
             )}
-            {sessions ? (
+            {sessions && !isFetching ? (
               // TODO: refactor this
               sessions?.map((session, index) => {
                 const MAX_STAGGER_DELAY_TOTAL = 0.5;

@@ -25,7 +25,7 @@ export default function DashboardUsersPage() {
     orders: formatTanstackTableSorting(table.sorting),
   });
 
-  const { data, isPending, error, refetch } = useQuery(
+  const { data, isFetching, error, refetch } = useQuery(
     trpc.user.hq.get.queryOptions(query)
   );
 
@@ -42,7 +42,7 @@ export default function DashboardUsersPage() {
           total={total}
           facets={facets}
           columns={columns}
-          isLoading={isPending}
+          isLoading={isFetching}
           onRetry={refetch}
           data={users}
           searchables={["email", "firstName", "lastName", "username"]}
