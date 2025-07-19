@@ -10,4 +10,6 @@ services: .setup
 		docker compose -f docker/$(LOCAL_DOCKER_COMPOSE_CONFIG) up $(if $(filter true,$(LOCAL_DETACHED)),-d)
 
 .setup: 
-	mkdir -p docker/tmp/postgres
+	mkdir -p docker/tmp/postgres \
+	mkdir -p docker/tmp/redis \
+	mkdir -p docker/tmp/redisinsight

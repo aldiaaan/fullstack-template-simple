@@ -12,3 +12,24 @@ services:
       POSTGRES_PASSWORD: local
       POSTGRES_USER: local
       POSTGRES_DATABASE: local
+
+  redis:
+    container_name: perkeo-redis
+    image: redis:8-alpine
+    command: redis-server --requirepass local
+    volumes:
+      - ./tmp/redis:/data
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: local
+
+  redisinsight:
+    container_name: perkeo-redisinsight
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+    volumes:
+      - ./tmp/redisinsight:/data
+    depends_on:
+      - redis

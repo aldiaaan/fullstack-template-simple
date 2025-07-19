@@ -1,1 +1,2 @@
-app: pnpm dev
+app: bash bin/app
+workers: bash bin/workers

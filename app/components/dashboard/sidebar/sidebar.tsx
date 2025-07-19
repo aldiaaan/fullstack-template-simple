@@ -30,7 +30,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { Box } from "lucide-react";
+import { Box, Cog } from "lucide-react";
 import { useUser } from "~/hooks/use-user";
 
 const data = {
@@ -44,14 +44,19 @@ const data = {
       title: "Users",
       url: "/dashboard/users",
       icon: IconUsers,
-    }
+    },
+    {
+      title: "Background Jobs",
+      url: "/dashboard/background-jobs",
+      icon: Cog,
+    },
   ],
   navSecondary: [
     {
       title: "Settings",
       url: "/dashboard/settings",
       icon: IconSettings,
-    }
+    },
   ],
   documents: [
     {
@@ -72,7 +77,9 @@ const data = {
   ],
 };
 
-export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function DashboardSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const user = useUser();
 
   return (

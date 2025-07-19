@@ -1,0 +1,37 @@
+{
+  "files": ["app/libs/background-jobs/workers/**/*"],
+  "exclude": ["node_modules", "dist", "tsup.config.ts"],
+  "compilerOptions": {
+    "baseUrl": "./",
+
+    "lib": ["es2022"],
+
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    /* Base Options */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es6",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "allowImportingTsExtensions": false,
+    "paths": {
+      "~/*": ["./app/*"]
+    },
+
+    /* Building for a library: */
+    "declaration": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* Transpiling with TypeScript: */
+    "moduleResolution": "node",
+    "module": "ES2022",
+    "sourceMap": true
+  }
+}

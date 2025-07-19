@@ -2,6 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       DATABASE_URL: string;
+      REDIS_URL: string;
       NODE_ENV: "development" | "production";
       COOKIE_SECRET: string;
     }
