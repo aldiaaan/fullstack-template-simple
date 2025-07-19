@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+while IFS='=' read -r key value || [ -n "$key" ]; do
+  if [[ -z "$key" || "$key" =~ ^# ]]; then
+    continue
+  fi
+
+  key=$(echo "$key" | xargs)
+  value=$(echo "$value" | xargs)
+
+  if [[ -n "${!key}" ]]; then
+    echo "Variables loaded from .env: $key"
+  else
+    echo "$key (not set or empty after sourcing)"
+  fi
+done < .env
+
+goreman -f Procfile.dev start

@@ -1,20 +1,24 @@
-import type React from "react";
+import React from "react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 
 export type DashboardSectionHeaderProps = {
-  title?: string;
+  title?: React.ReactNode;
   tabs?: {
     href: string;
     key: string;
     label?: React.ReactNode;
   }[];
+  renderActions?: () => React.ReactNode;
+  actions?: React.ElementType;
 };
 
 export function DashboardSectionHeader(props: DashboardSectionHeaderProps) {
-  const { title, tabs = [] } = props;
+  const { title, actions = React.Fragment, tabs = [], renderActions } = props;
+
+  const Actions = actions;
 
   return (
     <header className="items-center gap-2 border-b transition-[width,height] ease-linear ">
@@ -24,7 +28,10 @@ export function DashboardSectionHeader(props: DashboardSectionHeaderProps) {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">{title}</h1>
+        <h1 className="text-base font-medium truncate mr-4">{title}</h1>
+        <div className="ml-auto">
+          {renderActions ? renderActions() : <Actions />}
+        </div>
       </div>
       {tabs.length ? (
         <div className="flex gap-4 px-6 h-10 mt-2">

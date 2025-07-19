@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+TARGET_DIR="./"
+
+ORIGINAL_DIR=$(pwd)
+
+# Use trap to ensure we return to the original directory even if the script exits early
+trap 'cd "$ORIGINAL_DIR"' EXIT
+
+cd "$TARGET_DIR" || { echo "Error: Cannot change to directory $TARGET_DIR. Exiting."; exit 1; }
+
+echo "Running command in: $(pwd)"
+
+npm run dev

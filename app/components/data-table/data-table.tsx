@@ -35,6 +35,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { DataTableSearchInput } from "./search-input";
+import { cn } from "~/utils/react";
 
 export type DataTableFacet<TData> = {
   column: keyof TData;
@@ -62,6 +63,7 @@ type DataTableProps<TData, TValue> = {
   onPaginationChange?: OnChangeFn<PaginationState>;
   searchables?: (keyof TData)[];
   bulkActions?: React.ComponentType<{ table: TableType<TData> }>;
+  className?: string;
 };
 
 const MotionTableRow = motion.create(TableRow);
@@ -85,6 +87,7 @@ export function DataTable<TData, TValue>({
   onRetry,
   bulkActions,
   sorting,
+  className,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -136,7 +139,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="flex flex-col relative gap-4">
+    <div className={cn(className, "flex flex-col relative gap-4")}>
       <div className="flex">
         <DataTableSearchInput
           searchables={searchables}
@@ -226,7 +229,7 @@ export function DataTable<TData, TValue>({
                       delay:
                         (index / (pagination.pageSize - 1)) *
                         (index / (pagination.pageSize - 1)) *
-                        0.1 *
+                        0.02 *
                         (pagination.pageSize - 1),
                     }}
                     data-state={row.getIsSelected() && "selected"}
